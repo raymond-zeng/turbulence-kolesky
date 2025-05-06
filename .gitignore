@@ -1,0 +1,7 @@
+.direnv/
+.envrc
+__pycache__/
+# conda virtual environment
+.venv/
+DEMO_Getdata_local.ipynb
+giverny_output/
