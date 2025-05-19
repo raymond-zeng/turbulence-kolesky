@@ -5,3 +5,4 @@ __pycache__/
 .venv/
 DEMO_Getdata_local.ipynb
 giverny_output/
+*.pickle

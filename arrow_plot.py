@@ -69,13 +69,32 @@ def plot_velocity_arrow_3d(points, velocity):
     slider.on_changed(update)
     plt.show()
 
+def reverse_maximin(points):
+    n = np.shape(points)[0]
+    indices = np.zeros(n, dtype=int)
+    lengths = np.zeros(n, dtype=float)
+    dists = np.linalg.norm(points - points[0], axis=1)
+    indices[-1] = 0
+    lengths[0] = np.inf
+    for i in range(n - 2, -1, -1):
+        k = np.argmax(dists)
+        indices[i] = k
+        lengths[i] = dists[k]
+        dists = np.minimum(dists, np.linalg.norm(points[k] - points, axis=1))
+    return indices, lengths
+
+def maximin(points):
+    order = reverse_maximin(points)[0]
+    return order[::-1]
+
 nx = 10
 nz = 10
-x_points = np.linspace(0.0, 0.9, nx, dtype = np.float64)
-y_points = 0.9
-z_points = np.linspace(0.0, 0.9, nz, dtype = np.float64)
+x_points = np.linspace(0.0, 18 * np.pi / 512, nx, dtype = np.float64)
+y_points = np.pi / 2
+z_points = np.linspace(0.0, 18 * np.pi / 512, nx, dtype = np.float64)
 points = np.array([axis.ravel() for axis in np.meshgrid(x_points, y_points, z_points, indexing = 'ij')], dtype = np.float64).T
 with open('10x10iso1024.pickle', 'rb') as f:
     velocity = pickle.load(f)
-
-plot_velocity_arrow(points, velocity)
+order = maximin(points)
+ordered_points = points[order]
+plot_velocity_arrow(ordered_points, velocity)
